@@ -1,6 +1,9 @@
 const mongoose = require( 'mongoose' )
+require( 'dotenv' ).config()
 
-const connectionURL = "mongodb+srv://wayne:wayne@cluster0.s18g6mj.mongodb.net/?retryWrites=true&w=majority"
+const connectionURL = process.env.connectionURL;
+
+
 mongoose.set( "strictQuery", false );
 
 mongoose.connect( connectionURL, {

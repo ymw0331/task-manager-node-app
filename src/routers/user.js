@@ -7,6 +7,11 @@ const {
 } = require( 'morgan' );
 const multer = require( 'multer' )
 const sharp = require( 'sharp' )
+const {
+  sendWelcomeEmail,
+  sendCancellationEmail
+} = require( "../emails/account" )
+
 
 router.get( "/test", ( req, res ) => {
   res.send( "From a new file" )
@@ -16,6 +21,7 @@ router.post( "/users", async ( req, res ) => {
   const user = new User( req.body )
   try {
     await user.save()
+    sendWelcomeEmail( user.email, user.name )
     const token = await user.generateAuthToken() //used as authentication
 
     res.status( 201 ).send( {
@@ -23,7 +29,9 @@ router.post( "/users", async ( req, res ) => {
       token
     } )
   } catch ( error ) {
-    res.status( 400 ).send( error )
+    res.status( 400 ).send( {
+      error: error.message
+    } )
   }
 } )
 
@@ -124,6 +132,7 @@ router.get( "/tasks", async ( req, res ) => {
 router.delete( '/users/me', auth, async ( req, res ) => {
   try {
     await req.user.remove()
+    sendCancellationEmail( req.user.email, req.user.name )
     res.send( req.user )
 
   } catch ( error ) {

@@ -3,6 +3,7 @@ const mongoose = require( 'mongoose' )
 const validator = require( "validator" )
 const bcrypt = require( 'bcryptjs' )
 const Task = require( './task' )
+require( "dotenv" ).config()
 
 const userSchema = new mongoose.Schema( {
   name: {
@@ -78,7 +79,7 @@ userSchema.methods.generateAuthToken = async function () {
 
   const token = jwt.sign( {
     _id: user._id.toString()
-  }, 'thisismynewcourse' )
+  }, process.env.jwt_secret )
 
   user.tokens = user.tokens.concat( {
     token
