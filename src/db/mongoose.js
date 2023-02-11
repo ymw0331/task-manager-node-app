@@ -1,16 +1,12 @@
 const mongoose = require( 'mongoose' )
 require( 'dotenv' ).config()
 
-const connectionURL = process.env.connectionURL;
-
+const connectionURL = process.env.MONGODB_URL;
 
 mongoose.set( "strictQuery", false );
 
 mongoose.connect( connectionURL, {
   dbName: "task-manager-api",
-  // useNewUrlParser: true,
-  // useFindAndModify: false,
-  // useCreateIndex: true
 }, ( error, client ) => {
   if ( error ) {
     return console.log( "Unable to connect to MongoDB!" )
